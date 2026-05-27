@@ -61,18 +61,15 @@ export default function Result() {
 
       <header className="w-full rounded-xl border border-secondary/30 bg-surface/40 backdrop-blur-md px-gutter py-base z-50 flex justify-between items-center shadow-[0_0_20px_rgba(137,206,255,0.2)]">
         <div className="flex items-center gap-sm">
-          <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border border-secondary/20">
-            <Logo className="w-full h-full scale-[0.6] object-cover" />
-          </div>
+          <Logo className="h-8 w-auto" />
           <span className="font-display-lg-mobile text-[18px] font-extrabold text-white tracking-tight">P&P Lucky Spin</span>
         </div>
       </header>
 
       <div className="mt-xl flex flex-col gap-xs animate-slide-up" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
-        <h1 className="font-display-lg-mobile text-[48px] text-brand-yellow drop-shadow-[0_0_15px_rgba(255,198,11,0.5)] leading-tight">
+        <h1 className="font-display-lg-mobile text-[48px] text-brand-yellow drop-shadow-[0_0_15px_rgba(255,198,11,0.5)] leading-tight font-black">
           CHÚC MỪNG!
         </h1>
-        <p className="font-label-bold font-bold text-secondary uppercase tracking-[0.2em] opacity-80">Chiến thắng rực rỡ</p>
       </div>
 
       <div className="glass-panel w-full p-md rounded-[24px] flex flex-col items-center gap-md relative overflow-hidden animate-slide-up" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
@@ -102,7 +99,7 @@ export default function Result() {
         <div className="flex items-start gap-sm text-left bg-surface-container-high/50 p-sm rounded-lg border border-outline-variant/20">
           <span className="material-symbols-outlined text-secondary">info</span>
           <p className="font-label-bold font-bold text-[14px] text-white leading-relaxed">
-            Vui lòng gặp nhân viên <span className="text-secondary">P&P</span> tại booth để nhận quà. Vui lòng giữ màn hình này để đối soát.
+            Vui lòng gặp nhân viên <span className="text-secondary">Phuoc & Partners</span> tại booth để nhận quà. Vui lòng giữ màn hình này để đối soát.
           </p>
         </div>
 

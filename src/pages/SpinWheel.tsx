@@ -6,7 +6,7 @@ import Logo from '../components/Logo';
 
 const prizesLookup = [
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
-  { id: 'notebook', name: "Sổ tay P&P", icon: "menu_book" },
+  { id: 'notebook', name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
   { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
   { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
@@ -83,9 +83,7 @@ export default function SpinWheel() {
       
       <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-32px)] max-w-[448px] rounded-xl border border-secondary/30 bg-surface/40 backdrop-blur-md z-50 flex justify-between items-center px-gutter py-base shadow-[0_0_20px_rgba(137,206,255,0.2)]">
         <div className="flex items-center gap-base">
-          <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border border-primary/30">
-            <Logo className="w-full h-full scale-[0.6] object-cover" />
-          </div>
+          <Logo className="h-8 w-auto" />
           <span className="font-display-lg-mobile text-[18px] font-extrabold text-white tracking-tight">P&P Lucky Spin</span>
         </div>
       </nav>
@@ -182,7 +180,7 @@ export default function SpinWheel() {
             <div className="flex justify-between items-center p-sm rounded-lg bg-surface-container-highest/50 border border-outline-variant/30">
               <div className="flex items-center gap-sm">
                 <span className="material-symbols-outlined text-brand-yellow">menu_book</span>
-                <span className="font-label-bold font-bold text-[13px] text-white">Sổ tay P&P</span>
+                <span className="font-label-bold font-bold text-[13px] text-white">Sổ tay Phuoc & Partners</span>
               </div>
               <span className="bg-secondary-container/80 border border-white/20 backdrop-blur-sm px-sm py-1 rounded-full text-[12px] font-bold text-white">
                  {inventory?.notebook ?? '-'} còn lại

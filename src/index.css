@@ -4,7 +4,7 @@
   --color-primary: #acc7ff;
   --color-primary-container: #184d99;
   --color-on-primary-container: #a4c1ff;
-  --color-secondary: #89ceff;
+  --color-secondary: #15b0f8;
   --color-secondary-container: #00aaf2;
   --color-background: #121414;
   --color-surface: #121414;
@@ -90,7 +90,7 @@ body {
 
 .input-glow:focus {
   box-shadow: 0 0 15px rgba(137, 206, 255, 0.3);
-  border-color: #89ceff;
+  border-color: #15b0f8;
 }
 
 .btn-glow:not(:disabled):hover {
