@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti';
 import { Prize } from '../types';
 
 import Logo from '../components/Logo';
+import PrizeIcon from '../components/PrizeIcon';
 
 export default function Result() {
   const location = useLocation();
@@ -78,8 +79,8 @@ export default function Result() {
         <div className="relative w-48 h-48 flex items-center justify-center animate-float">
           <div className="absolute inset-0 bg-brand-yellow opacity-10 blur-2xl rounded-full"></div>
           {/* Mockup prize image depending on product */}
-          <div className="w-40 h-40 bg-surface-container-high rounded-xl z-10 flex items-center justify-center border border-secondary/30 drop-shadow-[0_0_20px_rgba(255,198,11,0.4)]">
-             <span className="material-symbols-outlined text-[64px] text-brand-yellow">{prize.icon}</span>
+          <div className="w-40 h-40 bg-surface-container-high rounded-xl z-10 flex items-center justify-center border border-secondary/30 drop-shadow-[0_0_20px_rgba(255,198,11,0.4)] p-4">
+             <PrizeIcon id={prize.id} className="w-full h-full object-contain" />
           </div>
           
           <div className="absolute bottom-2 right-2 bg-brand-yellow text-brand-blue-deep p-2 rounded-full shadow-lg z-20">
@@ -113,7 +114,7 @@ export default function Result() {
 
       <footer className="flex flex-col gap-md w-full pb-xl mt-auto pt-8 animate-fade-in" style={{ animationDelay: '0.7s', animationFillMode: 'both' }}>
         <p className="font-body text-[14px] text-white/60 px-md">
-          Cảm ơn bạn đã ghé thăm booth của <span className="font-bold text-primary">Phuoc & Partners</span> tại Vietnam Labour Forum 2026!
+          Cảm ơn bạn đã ghé thăm booth của <span className="font-bold text-secondary">Phuoc & Partners</span> tại Vietnam Labour Forum 2026!
         </p>
         
         <div className="flex justify-center gap-md">

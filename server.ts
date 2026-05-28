@@ -1,6 +1,9 @@
 import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Mock data store
 let leads: any[] = [];
@@ -11,16 +14,14 @@ let inventory = {
 };
 
 const prizes = [
+  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
   { id: 'notebook', name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
-  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
-  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
-  { id: 'tag', name: "Tag hành lý", icon: "tag" },
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
   { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
-  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
-  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" }
+  { id: 'notebook', name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
+  { id: 'tag', name: "Tag hành lý", icon: "tag" }
 ];
 
 async function startServer() {
@@ -62,6 +63,18 @@ async function startServer() {
 
     const newLead = { name, phone, email, company, prize: prizeObj.name, timestamp: new Date().toISOString() };
     leads.push(newLead);
+
+    // Save to Google Sheets asynchronously in the background
+    const sheetUrl = process.env.GOOGLE_SHEET_WEBAPP_URL;
+    if (sheetUrl) {
+      fetch(sheetUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newLead)
+      }).catch(err => {
+        console.error("Failed to save to Google Sheets:", err);
+      });
+    }
     
     // Increment queue
     queueIndex = (queueIndex + 1) % prizes.length;

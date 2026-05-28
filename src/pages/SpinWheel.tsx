@@ -3,18 +3,17 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { getInventory, submitLead } from '../lib/api';
 import { Inventory, LeadData, Prize } from '../types';
 import Logo from '../components/Logo';
+import PrizeIcon from '../components/PrizeIcon';
 
 const prizesLookup = [
+  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
   { id: 'notebook', name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
-  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
-  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
-  { id: 'tag', name: "Tag hành lý", icon: "tag" },
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
   { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
-  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
-  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" }
+  { id: 'notebook', name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
+  { id: 'tag', name: "Tag hành lý", icon: "tag" }
 ];
 
 export default function SpinWheel() {
@@ -56,11 +55,11 @@ export default function SpinWheel() {
       const matchingIndices = prizesLookup.map((p, i) => p.id === prizeId ? i : -1).filter(i => i !== -1);
       const targetIndex = matchingIndices[Math.floor(Math.random() * matchingIndices.length)];
       
-      // 10 segments -> 36 degrees per segment
-      const segmentAngle = 36;
+      // 8 segments -> 45 degrees per segment
+      const segmentAngle = 45;
       // The pointer is at the top (0 degrees).
-      // We want the target segment to land at 0/-360 mode.
-      const targetRotation = 360 - (targetIndex * segmentAngle);
+      // We want the target segment's center to land exactly at 0 (pointing directly up).
+      const targetRotation = 360 - (targetIndex * segmentAngle + segmentAngle / 2);
       
       const extraSpins = 5; // Spin 5 full times
       const newRotation = rotation + (extraSpins * 360) + targetRotation - (rotation % 360);
@@ -124,21 +123,39 @@ export default function SpinWheel() {
               transitionTimingFunction: 'cubic-bezier(0.15, 0, 0.15, 1)'
             }}
           >
+            {/* Background Wedges */}
             {prizesLookup.map((prize, index) => {
-              const segmentAngle = 36;
+              const segmentAngle = 45;
               const skew = 90 - segmentAngle;
               return (
-                <div key={index} className="absolute w-1/2 h-1/2 origin-bottom-right flex items-center justify-center border-r border-white/20"
-                     style={{
-                       transform: `rotate(${index * segmentAngle}deg) skewY(${skew}deg)`,
-                       backgroundColor: index % 2 === 0 ? '#184d99' : '#00aaf2'
-                     }}>
-                  <div className="flex flex-col items-center gap-1"
-                       style={{ transform: `skewY(-${skew}deg) rotate(${segmentAngle/2}deg) translateY(-85px)` }}>
-                    <span className="material-symbols-outlined text-white text-[28px] drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">{prize.icon}</span>
-                    <span className="text-white text-[10px] font-bold uppercase text-center max-w-[60px] leading-[1.1] drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
-                      {prize.name}
-                    </span>
+                <div 
+                  key={`bg-${index}`} 
+                  className="absolute w-1/2 h-1/2 origin-bottom-right border-r-2 border-[#ffd700]/70"
+                  style={{
+                    transform: `rotate(${(index + 1) * segmentAngle}deg) skewY(${skew}deg)`,
+                    backgroundColor: '#ffffff'
+                  }} 
+                />
+              );
+            })}
+
+            {/* Content Layer (Icons) - Layered on top to bypass browser skew z-index bugs */}
+            {prizesLookup.map((prize, index) => {
+              const segmentAngle = 45;
+              const angle = index * segmentAngle + segmentAngle / 2;
+              return (
+                <div 
+                  key={`content-${index}`} 
+                  className="absolute w-[60px] h-[160px] flex flex-col items-center justify-start pointer-events-none"
+                  style={{
+                    top: '50%',
+                    left: '50%',
+                    transform: `translate(-50%, -100%) rotate(${angle}deg)`,
+                    transformOrigin: 'bottom center',
+                  }}
+                >
+                  <div className="w-14 h-14 flex items-center justify-center mt-5">
+                    <PrizeIcon id={prize.id} />
                   </div>
                 </div>
               );
