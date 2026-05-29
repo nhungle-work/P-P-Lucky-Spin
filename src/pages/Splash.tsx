@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import Logo from "../components/Logo";
+import PrizeIcon from "../components/PrizeIcon";
 
 export default function Splash() {
   const navigate = useNavigate();
@@ -8,14 +9,17 @@ export default function Splash() {
   return (
     <main className="relative z-10 min-h-screen flex flex-col items-center justify-center px-gutter text-center max-w-[480px] mx-auto animate-fade-in">
       <div className="fixed inset-0 z-0 bg-transparent pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 animate-float" style={{ animationDelay: '0s' }}>
-          <span className="material-symbols-outlined text-secondary opacity-20 text-[64px]">gavel</span>
+        <div className="absolute top-[15%] left-[10%] animate-float opacity-40" style={{ animationDelay: '0s' }}>
+          <PrizeIcon id="tag" className="w-16 h-16 drop-shadow-lg" />
         </div>
-        <div className="absolute bottom-1/4 right-1/4 animate-float" style={{ animationDelay: '2s' }}>
-          <span className="material-symbols-outlined text-secondary opacity-20 text-[48px]">verified</span>
+        <div className="absolute bottom-[20%] right-[15%] animate-float opacity-40" style={{ animationDelay: '1.5s' }}>
+          <PrizeIcon id="notebook" className="w-20 h-20 drop-shadow-lg" />
         </div>
-        <div className="absolute top-1/2 right-1/4 animate-float" style={{ animationDelay: '4s' }}>
-          <span className="material-symbols-outlined text-secondary opacity-20 text-[80px]">architecture</span>
+        <div className="absolute top-[40%] right-[10%] animate-float opacity-40" style={{ animationDelay: '3s' }}>
+          <PrizeIcon id="combo" className="w-24 h-24 drop-shadow-lg" />
+        </div>
+        <div className="absolute top-[60%] left-[15%] animate-float opacity-40" style={{ animationDelay: '2s' }}>
+          <PrizeIcon id="tag" className="w-12 h-12 drop-shadow-lg" />
         </div>
       </div>
 
