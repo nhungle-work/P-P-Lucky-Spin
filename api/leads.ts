@@ -1,9 +1,13 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { supabase } from "./_lib/supabase";
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+// Self-contained leads handler - no shared module imports
+export default async function handler(req: any, res: any) {
   try {
-    if (supabase) {
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+
+    if (supabaseUrl && supabaseAnonKey) {
+      const { createClient } = await import("@supabase/supabase-js");
+      const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
       const { data, error } = await supabase
         .from("leads")
         .select("*")
