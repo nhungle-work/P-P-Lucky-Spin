@@ -8,17 +8,17 @@ export default function Splash() {
 
   return (
     <main className="relative z-10 min-h-screen flex flex-col items-center justify-center px-gutter text-center max-w-[480px] mx-auto animate-fade-in">
-      <div className="fixed inset-0 z-0 bg-transparent pointer-events-none">
-        <div className="absolute top-[15%] left-[10%] animate-float opacity-40" style={{ animationDelay: '0s' }}>
+      <div className="absolute inset-0 z-0 bg-transparent pointer-events-none">
+        <div className="absolute top-[15%] left-[5%] animate-float opacity-40" style={{ animationDelay: '0s' }}>
           <PrizeIcon id="tag" className="w-16 h-16 drop-shadow-lg" />
         </div>
-        <div className="absolute bottom-[20%] right-[15%] animate-float opacity-40" style={{ animationDelay: '1.5s' }}>
+        <div className="absolute bottom-[25%] right-[5%] animate-float opacity-40" style={{ animationDelay: '1.5s' }}>
           <PrizeIcon id="notebook" className="w-20 h-20 drop-shadow-lg" />
         </div>
-        <div className="absolute top-[40%] right-[10%] animate-float opacity-40" style={{ animationDelay: '3s' }}>
+        <div className="absolute top-[35%] right-[2%] animate-float opacity-40" style={{ animationDelay: '3s' }}>
           <PrizeIcon id="combo" className="w-24 h-24 drop-shadow-lg" />
         </div>
-        <div className="absolute top-[60%] left-[15%] animate-float opacity-40" style={{ animationDelay: '2s' }}>
+        <div className="absolute top-[60%] left-[2%] animate-float opacity-40" style={{ animationDelay: '2s' }}>
           <PrizeIcon id="tag" className="w-12 h-12 drop-shadow-lg" />
         </div>
       </div>
