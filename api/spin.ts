@@ -1,14 +1,19 @@
-// Self-contained spin handler - no shared module imports
+// Prize rotation sequence (must match frontend prizesLookup and PRD exactly)
 const prizes = [
-  { id: "combo", name: "Combo nhân sự", icon: "folder_shared" },
   { id: "tag", name: "Tag hành lý", icon: "tag" },
   { id: "notebook", name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
   { id: "tag", name: "Tag hành lý", icon: "tag" },
   { id: "combo", name: "Combo nhân sự", icon: "folder_shared" },
+  { id: "combo", name: "Combo nhân sự", icon: "folder_shared" },
   { id: "tag", name: "Tag hành lý", icon: "tag" },
-  { id: "notebook", name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
+  { id: "combo", name: "Combo nhân sự", icon: "folder_shared" },
   { id: "tag", name: "Tag hành lý", icon: "tag" },
+  { id: "combo", name: "Combo nhân sự", icon: "folder_shared" },
+  { id: "combo", name: "Combo nhân sự", icon: "folder_shared" },
 ];
+
+const TAG_TOTAL = 100;
+const NOTEBOOK_TOTAL = 10;
 
 async function saveToGoogleSheets(payload: object) {
   const sheetUrl = process.env.GOOGLE_SHEET_WEBAPP_URL;
@@ -44,85 +49,93 @@ export default async function handler(req: any, res: any) {
       const { createClient } = await import("@supabase/supabase-js");
       const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-      // Check duplicate
+      // 1. Check duplicate phone
       const { data: dupCheck, error: dupError } = await supabase
         .from("leads")
         .select("id")
         .eq("phone", phone)
         .maybeSingle();
 
-      if (dupError) {
-        console.error("Duplicate check error:", dupError);
-        return res.status(500).json({ error: "Database error: " + dupError.message });
-      }
-      if (dupCheck) {
-        return res.status(400).json({ error: "Số điện thoại đã tham gia" });
-      }
+      if (dupError) return res.status(500).json({ error: "Database error: " + dupError.message });
+      if (dupCheck) return res.status(400).json({ error: "Số điện thoại đã tham gia" });
 
-      // Fetch or create game state
-      let { data: state, error: stateError } = await supabase
-        .from("game_state")
-        .select("*")
-        .eq("id", 1)
-        .maybeSingle();
-
-      if (stateError) {
-        console.error("Game state error:", stateError);
-        return res.status(500).json({ error: "Game state error: " + stateError.message });
-      }
-
-      if (!state) {
-        const { data: inserted, error: insertError } = await supabase
-          .from("game_state")
-          .insert([{ id: 1, tag_count: 100, notebook_count: 10, queue_index: 0 }])
-          .select()
-          .single();
-        if (insertError) {
-          console.error("Insert game state error:", insertError);
-          return res.status(500).json({ error: "Game state init error: " + insertError.message });
-        }
-        state = inserted;
-      }
-
-      const currentQueueIndex = state.queue_index;
-      const currentInventory = { tag: state.tag_count as number, notebook: state.notebook_count as number };
-
-      let prizeObj = prizes[currentQueueIndex % prizes.length];
-      if (prizeObj.id !== "combo" && currentInventory[prizeObj.id as keyof typeof currentInventory] <= 0) {
-        prizeObj = { id: "combo", name: "Combo nhân sự", icon: "folder_shared" };
-      } else if (prizeObj.id !== "combo") {
-        currentInventory[prizeObj.id as keyof typeof currentInventory]--;
-      }
-
-      // Update game state (best effort)
-      await supabase.from("game_state").update({
-        tag_count: currentInventory.tag,
-        notebook_count: currentInventory.notebook,
-        queue_index: (currentQueueIndex + 1) % prizes.length,
-      }).eq("id", 1);
-
-      // Insert lead (best effort)
-      await supabase.from("leads").insert([{
+      // 2. Insert lead first to claim an atomic slot
+      const { data: lead, error: insertError } = await supabase.from("leads").insert([{
         name, phone, email, company,
-        prize: prizeObj.name,
+        prize: "Pending", // temporary placeholder
         created_at: timestamp,
-      }]);
+      }]).select().single();
 
-      // Save to Google Sheets
+      if (insertError) {
+        console.error("Insert lead error:", insertError);
+        return res.status(500).json({ error: "Failed to create lead slot" });
+      }
+
+      // 3. Count leads that were inserted before this one based on id
+      const { count: priorSpins, error: countError } = await supabase
+        .from("leads")
+        .select("id", { count: "exact", head: true })
+        .lt("id", lead.id);
+
+      if (countError) {
+        console.error("Count error:", countError);
+        // Fallback to 0 if count fails
+      }
+
+      const queueIndex = (priorSpins || 0) % prizes.length;
+
+      // 4. Get remaining inventory from actual leads (excluding the Pending ones if they matter, but they don't match names)
+      const { count: tagUsed } = await supabase
+        .from("leads")
+        .select("id", { count: "exact", head: true })
+        .eq("prize", "Tag hành lý");
+
+      const { count: notebookUsed } = await supabase
+        .from("leads")
+        .select("id", { count: "exact", head: true })
+        .eq("prize", "Sổ tay Phuoc & Partners");
+
+      const remainingTag = Math.max(0, TAG_TOTAL - (tagUsed || 0));
+      const remainingNotebook = Math.max(0, NOTEBOOK_TOTAL - (notebookUsed || 0));
+
+      // 5. Determine prize based on queue
+      let prizeObj = prizes[queueIndex];
+      if (prizeObj.id === "tag" && remainingTag <= 0) {
+        prizeObj = { id: "combo", name: "Combo nhân sự", icon: "folder_shared" };
+      } else if (prizeObj.id === "notebook" && remainingNotebook <= 0) {
+        prizeObj = { id: "combo", name: "Combo nhân sự", icon: "folder_shared" };
+      }
+
+      // 6. Update lead with actual prize
+      await supabase.from("leads").update({
+        prize: prizeObj.name,
+      }).eq("id", lead.id);
+
+      // 7. Recalculate inventory after final decision
+      const newRemainingTag = prizeObj.id === "tag" ? remainingTag - 1 : remainingTag;
+      const newRemainingNotebook = prizeObj.id === "notebook" ? remainingNotebook - 1 : remainingNotebook;
+
+      // 8. Save to Google Sheets
       await saveToGoogleSheets({ name, phone, email, company, prize: prizeObj.name, timestamp });
 
-      return res.json({ prize: prizeObj, inventory: currentInventory });
+      return res.json({
+        prize: prizeObj,
+        inventory: {
+          tag: Math.max(0, newRemainingTag),
+          notebook: Math.max(0, newRemainingNotebook),
+        },
+      });
 
     } else {
-      // No Supabase — fallback mode, still save to Google Sheets
+      // No Supabase fallback
       console.log("No Supabase configured, using fallback");
       const prizeObj = prizes[0];
       await saveToGoogleSheets({ name, phone, email, company, prize: prizeObj.name, timestamp });
-      return res.json({ prize: prizeObj, inventory: { tag: 100, notebook: 10 } });
+      return res.json({ prize: prizeObj, inventory: { tag: TAG_TOTAL, notebook: NOTEBOOK_TOTAL } });
     }
 
   } catch (e: any) {
-    console.error("Spin handler unhandled error:", e);
+    console.error("Spin handler error:", e);
     return res.status(500).json({ error: e?.message || "Unknown server error" });
   }
 }

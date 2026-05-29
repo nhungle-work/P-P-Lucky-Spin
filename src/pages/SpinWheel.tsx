@@ -6,14 +6,16 @@ import Logo from '../components/Logo';
 import PrizeIcon from '../components/PrizeIcon';
 
 const prizesLookup = [
-  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
   { id: 'notebook', name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
   { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
+  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
-  { id: 'notebook', name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
-  { id: 'tag', name: "Tag hành lý", icon: "tag" }
+  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
+  { id: 'tag', name: "Tag hành lý", icon: "tag" },
+  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
+  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" }
 ];
 
 export default function SpinWheel() {
@@ -55,8 +57,8 @@ export default function SpinWheel() {
       const matchingIndices = prizesLookup.map((p, i) => p.id === prizeId ? i : -1).filter(i => i !== -1);
       const targetIndex = matchingIndices[Math.floor(Math.random() * matchingIndices.length)];
       
-      // 8 segments -> 45 degrees per segment
-      const segmentAngle = 45;
+      // 10 segments -> 36 degrees per segment
+      const segmentAngle = 36;
       // The pointer is at the top (0 degrees).
       // We want the target segment's center to land exactly at 0 (pointing directly up).
       const targetRotation = 360 - (targetIndex * segmentAngle + segmentAngle / 2);
@@ -125,7 +127,7 @@ export default function SpinWheel() {
           >
             {/* Background Wedges */}
             {prizesLookup.map((prize, index) => {
-              const segmentAngle = 45;
+              const segmentAngle = 36;
               const skew = 90 - segmentAngle;
               return (
                 <div 
@@ -141,7 +143,7 @@ export default function SpinWheel() {
 
             {/* Content Layer (Icons) - Layered on top to bypass browser skew z-index bugs */}
             {prizesLookup.map((prize, index) => {
-              const segmentAngle = 45;
+              const segmentAngle = 36;
               const angle = index * segmentAngle + segmentAngle / 2;
               return (
                 <div 
