@@ -12,12 +12,8 @@ export default async function handler(req: any, res: any) {
       const { createClient } = await import("@supabase/supabase-js");
       const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+      // Delete all leads to reset the game. We no longer use game_state.
       await supabase.from("leads").delete().neq("id", 0);
-      await supabase.from("game_state").update({
-        tag_count: 100,
-        notebook_count: 10,
-        queue_index: 0,
-      }).eq("id", 1);
     }
     return res.json({ success: true });
   } catch (e: any) {
