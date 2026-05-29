@@ -1,18 +1,49 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { supabase, prizes } from "./_lib/supabase";
+// Self-contained spin handler - no shared module imports
+const prizes = [
+  { id: "combo", name: "Combo nhân sự", icon: "folder_shared" },
+  { id: "tag", name: "Tag hành lý", icon: "tag" },
+  { id: "notebook", name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
+  { id: "tag", name: "Tag hành lý", icon: "tag" },
+  { id: "combo", name: "Combo nhân sự", icon: "folder_shared" },
+  { id: "tag", name: "Tag hành lý", icon: "tag" },
+  { id: "notebook", name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
+  { id: "tag", name: "Tag hành lý", icon: "tag" },
+];
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+async function saveToGoogleSheets(payload: object) {
+  const sheetUrl = process.env.GOOGLE_SHEET_WEBAPP_URL;
+  if (!sheetUrl) return;
+  try {
+    await fetch(sheetUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  } catch (e) {
+    console.error("Google Sheets save error:", e);
+  }
+}
+
+export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { name, phone, email, company } = req.body;
+  const { name, phone, email, company } = req.body || {};
   if (!name || !phone || !email || !company) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
+  const timestamp = new Date().toISOString();
+
   try {
-    if (supabase) {
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+
+    if (supabaseUrl && supabaseAnonKey) {
+      const { createClient } = await import("@supabase/supabase-js");
+      const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
       // Check duplicate
       const { data: dupCheck, error: dupError } = await supabase
         .from("leads")
@@ -20,8 +51,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .eq("phone", phone)
         .maybeSingle();
 
-      if (dupError) return res.status(500).json({ error: dupError.message });
-      if (dupCheck) return res.status(400).json({ error: "Số điện thoại đã tham gia" });
+      if (dupError) {
+        console.error("Duplicate check error:", dupError);
+        return res.status(500).json({ error: "Database error: " + dupError.message });
+      }
+      if (dupCheck) {
+        return res.status(400).json({ error: "Số điện thoại đã tham gia" });
+      }
 
       // Fetch or create game state
       let { data: state, error: stateError } = await supabase
@@ -30,7 +66,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .eq("id", 1)
         .maybeSingle();
 
-      if (stateError) return res.status(500).json({ error: stateError.message });
+      if (stateError) {
+        console.error("Game state error:", stateError);
+        return res.status(500).json({ error: "Game state error: " + stateError.message });
+      }
 
       if (!state) {
         const { data: inserted, error: insertError } = await supabase
@@ -38,12 +77,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           .insert([{ id: 1, tag_count: 100, notebook_count: 10, queue_index: 0 }])
           .select()
           .single();
-        if (insertError) return res.status(500).json({ error: insertError.message });
+        if (insertError) {
+          console.error("Insert game state error:", insertError);
+          return res.status(500).json({ error: "Game state init error: " + insertError.message });
+        }
         state = inserted;
       }
 
       const currentQueueIndex = state.queue_index;
-      let currentInventory = { tag: state.tag_count, notebook: state.notebook_count };
+      const currentInventory = { tag: state.tag_count as number, notebook: state.notebook_count as number };
 
       let prizeObj = prizes[currentQueueIndex % prizes.length];
       if (prizeObj.id !== "combo" && currentInventory[prizeObj.id as keyof typeof currentInventory] <= 0) {
@@ -52,56 +94,35 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         currentInventory[prizeObj.id as keyof typeof currentInventory]--;
       }
 
-      // Update game state
+      // Update game state (best effort)
       await supabase.from("game_state").update({
         tag_count: currentInventory.tag,
         notebook_count: currentInventory.notebook,
         queue_index: (currentQueueIndex + 1) % prizes.length,
       }).eq("id", 1);
 
-      // Insert lead
-      const timestamp = new Date().toISOString();
-      await supabase.from("leads").insert([{ name, phone, email, company, prize: prizeObj.name, created_at: timestamp }]);
+      // Insert lead (best effort)
+      await supabase.from("leads").insert([{
+        name, phone, email, company,
+        prize: prizeObj.name,
+        created_at: timestamp,
+      }]);
 
-      // Google Sheets (awaited to ensure it completes before function terminates)
-      const sheetUrl = process.env.GOOGLE_SHEET_WEBAPP_URL;
-      if (sheetUrl) {
-        try {
-          await fetch(sheetUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, phone, email, company, prize: prizeObj.name, timestamp }),
-          });
-        } catch (sheetErr) {
-          console.error("Google Sheets error:", sheetErr);
-          // Don't fail the request if Sheets save fails
-        }
-      }
+      // Save to Google Sheets
+      await saveToGoogleSheets({ name, phone, email, company, prize: prizeObj.name, timestamp });
 
       return res.json({ prize: prizeObj, inventory: currentInventory });
+
     } else {
-      // Fallback: just pick first prize (no Supabase)
+      // No Supabase — fallback mode, still save to Google Sheets
+      console.log("No Supabase configured, using fallback");
       const prizeObj = prizes[0];
-      const timestamp = new Date().toISOString();
-
-      // Still try to save to Google Sheets in fallback mode
-      const sheetUrl = process.env.GOOGLE_SHEET_WEBAPP_URL;
-      if (sheetUrl) {
-        try {
-          await fetch(sheetUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, phone, email, company, prize: prizeObj.name, timestamp }),
-          });
-        } catch (sheetErr) {
-          console.error("Google Sheets error (fallback):", sheetErr);
-        }
-      }
-
+      await saveToGoogleSheets({ name, phone, email, company, prize: prizeObj.name, timestamp });
       return res.json({ prize: prizeObj, inventory: { tag: 100, notebook: 10 } });
     }
+
   } catch (e: any) {
-    console.error("spin error:", e);
-    return res.status(500).json({ error: e.message });
+    console.error("Spin handler unhandled error:", e);
+    return res.status(500).json({ error: e?.message || "Unknown server error" });
   }
 }

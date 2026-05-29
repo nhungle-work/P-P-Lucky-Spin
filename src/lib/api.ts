@@ -21,8 +21,16 @@ export async function submitLead(lead: LeadData): Promise<{ prize: Prize, invent
     body: JSON.stringify(lead)
   });
   if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error || 'Đã xảy ra lỗi');
+    const text = await res.text();
+    let errorMsg = `Server error (${res.status})`;
+    try {
+      const err = JSON.parse(text);
+      errorMsg = err.error || errorMsg;
+    } catch {
+      // Response was not JSON (e.g. Vercel HTML error page)
+      errorMsg = text.substring(0, 120) || errorMsg;
+    }
+    throw new Error(errorMsg);
   }
   return res.json();
 }
