@@ -93,6 +93,7 @@ export default function FormPage() {
               />
               <span className="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-white" style={{ fontSize: '18px' }}>call</span>
             </div>
+            <p className="text-[12px] text-white/60 ml-xs mt-1">Hãy điền số điện thoại đúng để đi tiếp</p>
           </div>
 
           <div className="space-y-xs">
@@ -106,6 +107,7 @@ export default function FormPage() {
               />
               <span className="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-white" style={{ fontSize: '18px' }}>mail</span>
             </div>
+            <p className="text-[12px] text-white/60 ml-xs mt-1">Hãy điền email đúng format để đi tiếp</p>
           </div>
 
           <div className="space-y-xs">
