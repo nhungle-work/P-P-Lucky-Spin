@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import { Prize } from '../types';
@@ -10,6 +10,7 @@ export default function Result() {
   const location = useLocation();
   const navigate = useNavigate();
   const prize = location.state?.prize as Prize;
+  const [showConsultModal, setShowConsultModal] = useState(false);
 
   const handleReset = async () => {
     navigate('/');
@@ -102,10 +103,10 @@ export default function Result() {
         </div>
 
         <button 
-          onClick={handleReset}
-          className="mt-xs w-full py-sm border border-brand-yellow/50 text-brand-yellow font-bold rounded-lg uppercase tracking-wider hover:bg-brand-yellow/10 transition-colors text-[14px]"
+          onClick={() => setShowConsultModal(true)}
+          className="mt-xs w-full py-sm border border-brand-yellow/50 text-brand-yellow font-bold rounded-lg uppercase tracking-wider hover:bg-brand-yellow/10 transition-colors text-[13px]"
         >
-          TRỞ VỀ TRANG CHỦ
+          Nhận tư vấn luật lao động miễn phí
         </button>
       </div>
 
@@ -129,6 +130,34 @@ export default function Result() {
           ))}
         </div>
       </footer>
+
+      {/* Consultation Modal */}
+      {showConsultModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-gutter animate-fade-in">
+          <div className="bg-[#002e68] border border-brand-yellow/30 rounded-2xl p-lg w-full max-w-[340px] flex flex-col items-center text-center gap-md shadow-[0_10px_40px_rgba(0,0,0,0.5)] relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand-yellow to-transparent"></div>
+            
+            <div className="w-16 h-16 rounded-full bg-brand-yellow/20 flex items-center justify-center mb-xs">
+              <span className="material-symbols-outlined text-brand-yellow text-[32px]">support_agent</span>
+            </div>
+            
+            <h3 className="font-headline-md text-[20px] font-bold text-white leading-tight">
+              Tư vấn Pháp luật
+            </h3>
+            
+            <p className="font-body text-[15px] text-white/90 leading-relaxed">
+              Hãy đến bàn tư vấn pháp luật lao động tại booth Phuoc & Partners nhé
+            </p>
+            
+            <button 
+              onClick={handleReset}
+              className="mt-sm w-full py-sm bg-brand-yellow text-brand-blue-deep font-bold rounded-lg uppercase tracking-wider hover:opacity-90 transition-opacity text-[14px]"
+            >
+              Đã hiểu
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
