@@ -63,20 +63,41 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const timestamp = new Date().toISOString();
       await supabase.from("leads").insert([{ name, phone, email, company, prize: prizeObj.name, created_at: timestamp }]);
 
-      // Google Sheets (async, fire and forget)
+      // Google Sheets (awaited to ensure it completes before function terminates)
       const sheetUrl = process.env.GOOGLE_SHEET_WEBAPP_URL;
       if (sheetUrl) {
-        fetch(sheetUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, phone, email, company, prize: prizeObj.name, timestamp }),
-        }).catch(console.error);
+        try {
+          await fetch(sheetUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, phone, email, company, prize: prizeObj.name, timestamp }),
+          });
+        } catch (sheetErr) {
+          console.error("Google Sheets error:", sheetErr);
+          // Don't fail the request if Sheets save fails
+        }
       }
 
       return res.json({ prize: prizeObj, inventory: currentInventory });
     } else {
-      // Fallback: just pick first prize
+      // Fallback: just pick first prize (no Supabase)
       const prizeObj = prizes[0];
+      const timestamp = new Date().toISOString();
+
+      // Still try to save to Google Sheets in fallback mode
+      const sheetUrl = process.env.GOOGLE_SHEET_WEBAPP_URL;
+      if (sheetUrl) {
+        try {
+          await fetch(sheetUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, phone, email, company, prize: prizeObj.name, timestamp }),
+          });
+        } catch (sheetErr) {
+          console.error("Google Sheets error (fallback):", sheetErr);
+        }
+      }
+
       return res.json({ prize: prizeObj, inventory: { tag: 100, notebook: 10 } });
     }
   } catch (e: any) {
