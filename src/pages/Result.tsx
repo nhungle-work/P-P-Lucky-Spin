@@ -97,7 +97,7 @@ export default function Result() {
         <div className="flex items-start gap-sm text-left bg-surface-container-high/50 p-sm rounded-lg border border-outline-variant/20">
           <span className="material-symbols-outlined text-secondary">info</span>
           <p className="font-label-bold font-bold text-[14px] text-white leading-relaxed">
-            Vui lòng gặp nhân viên <span className="text-secondary">Phuoc & Partners</span> tại booth để nhận quà. Vui lòng giữ màn hình này để đối soát.
+            Vui lòng giữ màn hình này gặp nhân viên <span className="text-secondary">Phuoc & Partners</span> tại booth để nhận quà.
           </p>
         </div>
 
