@@ -54,10 +54,10 @@ export default async function handler(req: any, res: any) {
         .from("leads")
         .select("id")
         .eq("phone", phone)
-        .maybeSingle();
+        .limit(1);
 
       if (dupError) return res.status(500).json({ error: "Database error: " + dupError.message });
-      if (dupCheck) return res.status(400).json({ error: "Số điện thoại đã tham gia" });
+      if (dupCheck && dupCheck.length > 0) return res.status(400).json({ error: "Số điện thoại đã tham gia" });
 
       // 2. Insert lead first to claim an atomic slot
       const { data: lead, error: insertError } = await supabase.from("leads").insert([{

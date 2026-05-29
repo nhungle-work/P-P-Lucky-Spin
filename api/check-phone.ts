@@ -31,13 +31,13 @@ export default async function handler(req: any, res: any) {
         .from("leads")
         .select("id")
         .eq("phone", phone)
-        .maybeSingle();
+        .limit(1);
 
       if (error) {
         console.error("Supabase error:", error);
         return res.json({ exists: false, warning: error.message });
       }
-      return res.json({ exists: !!data });
+      return res.json({ exists: data && data.length > 0 });
     }
 
     // No Supabase - allow everyone
