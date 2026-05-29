@@ -6,6 +6,10 @@ export async function checkPhone(phone: string): Promise<boolean> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ phone })
   });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`HTTP ${res.status}: ${text.substring(0, 100)}`);
+  }
   const data = await res.json();
   return data.exists;
 }

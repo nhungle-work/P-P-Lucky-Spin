@@ -1,18 +1,32 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { supabase } from "./_lib/supabase";
+// Simplified version for debugging - no Supabase dependency
+export default async function handler(req: any, res: any) {
+  // Allow CORS
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { phone } = req.body;
-  if (!phone) {
-    return res.status(400).json({ error: "Phone is required" });
-  }
-
   try {
-    if (supabase) {
+    const { phone } = req.body || {};
+    if (!phone) {
+      return res.status(400).json({ error: "Phone is required" });
+    }
+
+    // Try Supabase if available
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+
+    if (supabaseUrl && supabaseAnonKey) {
+      const { createClient } = await import("@supabase/supabase-js");
+      const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
       const { data, error } = await supabase
         .from("leads")
         .select("id")
@@ -20,16 +34,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .maybeSingle();
 
       if (error) {
-        console.error("Supabase check-phone error:", error);
-        return res.status(500).json({ error: error.message });
+        console.error("Supabase error:", error);
+        return res.json({ exists: false, warning: error.message });
       }
       return res.json({ exists: !!data });
-    } else {
-      // Supabase not configured - allow everyone (stateless fallback)
-      return res.json({ exists: false });
     }
+
+    // No Supabase - allow everyone
+    return res.json({ exists: false });
   } catch (e: any) {
-    console.error("check-phone error:", e);
-    return res.status(500).json({ error: e.message });
+    console.error("Handler error:", e);
+    return res.status(500).json({ error: e.message || "Unknown error" });
   }
 }

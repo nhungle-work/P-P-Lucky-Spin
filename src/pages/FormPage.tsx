@@ -39,8 +39,8 @@ export default function FormPage() {
         email: formData.email, 
         company: formData.company 
       }}});
-    } catch (err) {
-      setError('Đã xảy ra lỗi khi kiểm tra. Vui lòng thử lại sau.');
+    } catch (err: any) {
+      setError(`Lỗi: ${err.message}`);
       setIsSubmitting(false);
     }
   };
