@@ -12,9 +12,6 @@ export default function Result() {
   const prize = location.state?.prize as Prize;
 
   const handleReset = async () => {
-    try {
-      await fetch('/api/reset', { method: 'POST' });
-    } catch(e) {}
     navigate('/');
   };
 
