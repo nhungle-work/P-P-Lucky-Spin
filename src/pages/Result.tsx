@@ -117,16 +117,16 @@ export default function Result() {
         
         <div className="flex justify-center gap-md">
           {[
-             { icon: 'language', label: 'Website' },
-             { icon: 'share', label: 'Chia sẻ' },
-             { icon: 'group', label: 'Tư vấn' }
+             { icon: 'language', label: 'Website', link: 'https://phuoc-partner.com/' },
+             { icon: 'thumb_up', label: 'Facebook', link: 'https://www.facebook.com/PhuocPartners/' },
+             { icon: 'work', label: 'LinkedIn', link: 'https://www.linkedin.com/company/phuoc-partners-law-firm/?viewAsMember=true' }
           ].map((item, idx) => (
-             <div key={idx} className="flex flex-col items-center gap-xs cursor-pointer group">
+             <a key={idx} href={item.link} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-xs cursor-pointer group no-underline">
                <div className="w-12 h-12 rounded-full border border-secondary/30 flex items-center justify-center group-hover:bg-secondary/10 transition-colors">
                  <span className="material-symbols-outlined text-secondary">{item.icon}</span>
                </div>
                <span className="font-label-bold font-bold text-[10px] text-on-surface-variant uppercase tracking-wider">{item.label}</span>
-             </div>
+             </a>
           ))}
         </div>
       </footer>
