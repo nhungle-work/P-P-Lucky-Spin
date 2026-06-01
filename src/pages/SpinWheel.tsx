@@ -53,13 +53,15 @@ export default function SpinWheel() {
     setIsSpinning(true);
 
     const startRotation = rotation;
+    const spinStartTime = Date.now();
+    const SPIN_SPEED = 720; // Quay 2 vòng/giây trong lúc chờ
 
-    // Bắt đầu quay ngay lập tức với mục tiêu xa để không bao giờ bị quay ngược
+    // Bắt đầu quay ngay lập tức (vận tốc đều để dễ tính toán góc)
     setTransitionState({
       duration: '10s', 
-      timingFunction: 'cubic-bezier(0.1, 0, 1, 1)' 
+      timingFunction: 'linear' 
     });
-    setRotation(startRotation + 3600); 
+    setRotation(startRotation + SPIN_SPEED * 10); 
 
     try {
       const response = await submitLead(lead);
@@ -70,19 +72,27 @@ export default function SpinWheel() {
       const segmentAngle = 36;
       const targetOffset = 360 - (targetIndex * segmentAngle + segmentAngle / 2);
       
-      // Đặt đích đến đủ xa để bánh xe luôn tiến về phía trước (không bị quay lùi)
-      const finalRotation = startRotation + 1080 + targetOffset - (startRotation % 360);
+      // Tính toán góc hiện tại chính xác dựa trên thời gian trôi qua
+      const elapsedSec = (Date.now() - spinStartTime) / 1000;
+      const currentEstimatedAngle = startRotation + SPIN_SPEED * elapsedSec;
+      
+      // Tính đích đến tiếp theo sao cho luôn tiến về phía trước
+      let diff = targetOffset - (currentEstimatedAngle % 360);
+      if (diff < 0) diff += 360;
+      
+      // Cộng thêm 1 vòng (360 độ) làm đệm phanh trong 0.8s
+      const finalRotation = currentEstimatedAngle + diff + 360; 
       
       setTransitionState({
-        duration: '1s', // Dừng ngay sau 1s kể từ lúc API gọi xong
-        timingFunction: 'cubic-bezier(0.1, 0, 0.2, 1)'
+        duration: '0.8s', // Dừng khựng lại cực nhanh
+        timingFunction: 'cubic-bezier(0.1, 0, 0.2, 1)' // Phanh mượt nhưng gắt
       });
       setRotation(finalRotation);
 
       setTimeout(() => {
         setIsSpinning(false);
         navigate('/result', { state: { prize: response.prize } });
-      }, 1100); // Đợi 1s + 0.1s buffer
+      }, 850); // Chờ 0.8s + đệm xíu
       
     } catch (e: any) {
       alert(e.message || "Có lỗi xảy ra");
