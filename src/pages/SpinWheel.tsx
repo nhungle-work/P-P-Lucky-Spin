@@ -56,10 +56,10 @@ export default function SpinWheel() {
 
     // Bắt đầu quay ngay lập tức
     setTransitionState({
-      duration: '4s', // Thời gian quay chờ ngắn hơn
-      timingFunction: 'cubic-bezier(0.2, 0, 0.8, 1)' 
+      duration: '2s', 
+      timingFunction: 'cubic-bezier(0.3, 0, 0.7, 1)' 
     });
-    setRotation(startRotation + 2160); // 6 vòng chờ
+    setRotation(startRotation + 1080); // 3 vòng chờ
 
     try {
       const response = await submitLead(lead);
@@ -70,19 +70,19 @@ export default function SpinWheel() {
       const segmentAngle = 36;
       const targetOffset = 360 - (targetIndex * segmentAngle + segmentAngle / 2);
       
-      // Giảm số vòng quay còn lại xuống 4 vòng (1440 độ) để vòng quay kết thúc nhanh gọn
-      const finalRotation = startRotation + 1440 + targetOffset - (startRotation % 360);
+      // Giảm vòng quay còn lại xuống mức tối thiểu (2 vòng = 720 độ)
+      const finalRotation = startRotation + 720 + targetOffset - (startRotation % 360);
       
       setTransitionState({
-        duration: '2.5s', // Dừng lại sau 2.5s kể từ khi có API response
-        timingFunction: 'cubic-bezier(0.15, 0, 0.05, 1)'
+        duration: '1.5s', // Dừng ngay sau 1.5s kể từ lúc API gọi xong
+        timingFunction: 'cubic-bezier(0.1, 0, 0.05, 1)'
       });
       setRotation(finalRotation);
 
       setTimeout(() => {
         setIsSpinning(false);
         navigate('/result', { state: { prize: response.prize } });
-      }, 2700); // Thời gian chờ đủ 2.5s + 0.2s buffer
+      }, 1600); // Đợi 1.5s + 0.1s buffer
       
     } catch (e: any) {
       alert(e.message || "Có lỗi xảy ra");
