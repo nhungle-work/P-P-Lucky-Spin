@@ -180,33 +180,7 @@ export default function SpinWheel() {
           {isSpinning ? "ĐANG QUAY..." : "QUAY NGAY"}
         </button>
 
-        <div className="w-full glass-card rounded-xl p-md flex flex-col gap-sm">
-          <div className="flex items-center justify-between">
-            <h3 className="font-label-bold font-bold text-white">Phần thưởng còn lại</h3>
-            <span className="material-symbols-outlined text-secondary text-[20px]">inventory_2</span>
-          </div>
 
-          <div className="grid grid-cols-1 gap-sm">
-            <div className="flex justify-between items-center p-sm rounded-lg bg-surface-container-highest/50 border border-outline-variant/30">
-              <div className="flex items-center gap-sm">
-                <span className="material-symbols-outlined text-brand-yellow">tag</span>
-                <span className="font-label-bold font-bold text-[13px] text-white">Tag hành lý</span>
-              </div>
-              <span className="bg-secondary-container/80 border border-white/20 backdrop-blur-sm px-sm py-1 rounded-full text-[12px] font-bold text-white">
-                {inventory?.tag ?? '-'} còn lại
-              </span>
-            </div>
-            <div className="flex justify-between items-center p-sm rounded-lg bg-surface-container-highest/50 border border-outline-variant/30">
-              <div className="flex items-center gap-sm">
-                <span className="material-symbols-outlined text-brand-yellow">menu_book</span>
-                <span className="font-label-bold font-bold text-[13px] text-white">Sổ tay Phuoc & Partners</span>
-              </div>
-              <span className="bg-secondary-container/80 border border-white/20 backdrop-blur-sm px-sm py-1 rounded-full text-[12px] font-bold text-white">
-                 {inventory?.notebook ?? '-'} còn lại
-              </span>
-            </div>
-          </div>
-        </div>
       </div>
     </main>
   );
