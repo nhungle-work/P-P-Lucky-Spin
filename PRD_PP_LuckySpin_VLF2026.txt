@@ -1,4 +1,4 @@
-﻿PRODUCT REQUIREMENTS DOCUMENT
+PRODUCT REQUIREMENTS DOCUMENT
 P&P LUCKY SPIN
 Lucky Draw Web App — Vietnam Labour Forum 2026
 Phuoc & Partners — Attorney at Law
@@ -98,7 +98,7 @@ Thiết kế vòng quay:
 Logic phần thưởng — Deterministic Queue (không random):
 Kết quả quay được xác định trước theo vòng lặp tuần tự cố định:
 
-LượtQuà tặngGhi chú1Tag hành lý2Sổ tay P&P3Tag hành lý4Combo biểu mẫu nhân sự5Combo biểu mẫu nhân sự 6Tag hành lý7Combo biểu mẫu nhân sự8Tag hành lý9Combo biểu mẫu nhân sự10Combo biểu mẫu nhân sựLặp lại từ đầu
+LượtQuà tặngGhi chú1Tag hành lý2Combo biểu mẫu nhân sự3Sổ tay P&P4Combo biểu mẫu nhân sự5Combo biểu mẫu nhân sự 6Tag hành lý7Combo biểu mẫu nhân sự8Tag hành lý9Combo biểu mẫu nhân sự10Combo biểu mẫu nhân sựLặp lại từ đầu
 • Con trỏ vị trí hiện tại trong vòng lặp được lưu trong Google Sheet (Sheet2!A1) để đảm bảo nhất quán khi nhiều thiết bị dùng đồng thời
 • Vòng quay animation phải dừng đúng ô tương ứng với kết quả đã định
 
