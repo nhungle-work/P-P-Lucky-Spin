@@ -25,14 +25,16 @@ let inventory = {
 };
 
 const prizes = [
-  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
-  { id: 'tag', name: "Tag hành lý", icon: "tag" },
-  { id: 'notebook', name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
   { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
-  { id: 'tag', name: "Tag hành lý", icon: "tag" },
   { id: 'notebook', name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
-  { id: 'tag', name: "Tag hành lý", icon: "tag" }
+  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
+  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
+  { id: 'tag', name: "Tag hành lý", icon: "tag" },
+  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
+  { id: 'tag', name: "Tag hành lý", icon: "tag" },
+  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
+  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" }
 ];
 
 const app = express();
