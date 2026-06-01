@@ -1,0 +1,207 @@
+﻿PRODUCT REQUIREMENTS DOCUMENT
+P&P LUCKY SPIN
+Lucky Draw Web App — Vietnam Labour Forum 2026
+Phuoc & Partners — Attorney at Law
+
+Product NameP&P Lucky SpinVersion1.0StatusDraftTarget LaunchVLF 2026 Event DatePlatformMobile-first Web App (responsive, truy cập qua URL/QR code)
+1. Overview
+
+P&P Lucky Spin là một mobile-first web app được xây dựng để phục vụ hoạt động lucky draw tại booth của Phuoc & Partners trong khuôn khổ Vietnam Labour Forum 2026. Ứng dụng cho phép khách tham dự điền thông tin cá nhân, quay vòng quay may mắn và nhận quà tặng — đồng thời tự động ghi nhận toàn bộ lead data vào Google Sheet.
+
+2. Problem Statement
+
+Tại booth sự kiện VLF 2026, Phuoc & Partners muốn tạo một trải nghiệm tương tác hấp dẫn để thu hút khách tham quan, đồng thời thu thập dữ liệu leads một cách tự động và hiệu quả — thay thế hoàn toàn việc điền form thủ công bằng giấy tờ và quản lý quà tặng rời rạc.
+
+3. Goals & Success Metrics
+
+3.1 Business Goals
+• Thu thập lead data từ khách tham dự sự kiện một cách tự động
+• Tạo trải nghiệm vui, memorable tại booth của P&P
+• Quản lý phân phối quà tặng có kiểm soát, tránh phát quà trùng lặp
+
+3.2 Success Metrics
+
+MetricTargetTỷ lệ hoàn thành form≥ 90% người bắt đầuSố lượt quay ghi nhận vào Google Sheet100%Lỗi kỹ thuật (crash/bug) trong event0 critical bugsThời gian load app lần đầu (3G)< 3 giâyThời gian trung bình 1 lượt chơi≤ 2 phút
+4. User Personas
+
+4.1 Khách tham dự sự kiện (End User)
+
+Mô tảThiết bịKỳ vọngPain pointsHR Manager, Legal Counsel, hoặc Business Owner tại VLF 2026Điện thoại cá nhân (iOS/Android)Trải nghiệm nhanh, vui, không cần cài appNgại điền form dài, không muốn bị làm phiền
+4.2 Nhân viên booth P&P (Operator)
+
+Mô tảThiết bịKỳ vọngPain pointsNhân viên P&P hỗ trợ tại booth, hướng dẫn khách quét QR và chơiTablet hoặc điện thoại demoApp ổn định, không cần thao tác back-end trong giờ sự kiệnLo ngại app bị lỗi hoặc data không ghi nhận
+5. User Flow
+
+Luồng người dùng tuần tự từ khi quét QR đến khi nhận quà:
+
+[Khách quét QR / vào URL]
+         ↓
+[Màn hình Welcome — Splash Screen P&P]
+         ↓
+[Form nhập thông tin: Tên, SĐT, Email, Công ty]
+         ↓
+[Validate: SĐT đã quay chưa?]
+     ↙                    ↘
+[Đã quay]            [Chưa quay]
+     ↓                     ↓
+[Thông báo:        [Ghi data vào Google Sheet]
+" Số điện thoại             ↓
+ này đã tham      [Màn hình Vòng Quay Lucky Draw]
+     gia!"]                 ↓
+                   [Khách nhấn QUAY]
+                            ↓
+                   [Animation vòng quay]
+                            ↓
+                [Hiển thị kết quả — Quà tặng]
+                            ↓
+                [Cập nhật tồn kho real-time]
+                            ↓
+            [Màn hình cảm ơn + hướng dẫn nhận quà]
+
+6. Functional Requirements
+
+6.1 Màn hình Welcome / Splash
+• Hiển thị logo Phuoc & Partners
+• Tagline sự kiện: "Thử Vận May — Nhận Quà Bay"
+• "Chỉ có tại Diễn đàn Lao động Việt Nam"
+• Nút CTA: THAM GIA NGAY
+• Animation nhẹ khi load (fade-in hoặc slide-up)
+
+6.2 Form Nhập Thông Tin
+
+FieldTypeValidationBắt buộcHọ và tênTextTối thiểu 2 ký tự✅Số điện thoạiTel10 số, bắt đầu 0, chỉ số✅EmailEmailĐịnh dạng email hợp lệ✅Tên công tyTextTối thiểu 2 ký tự✅
+• Validate real-time khi user blur khỏi field
+• Nút submit disabled cho đến khi tất cả field hợp lệ
+• Trước khi submit: kiểm tra SĐT đã tồn tại trong Google Sheet chưa
+- Nếu đã có: hiển thị toast/modal "Số điện thoại này đã tham gia! Mỗi người chỉ được quay 1 lần."
+- Nếu chưa có: ghi data và chuyển sang màn hình vòng quay
+
+6.3 Google Sheet Integration (Backend)
+• Sử dụng Google Apps Script làm API endpoint (Web App deployment)
+• Mỗi lượt submit ghi 1 row mới vào Sheet với các cột:
+
+TimestampHọ tênSĐTEmailCông ty / Quà nhậnTự độngNhập từ formNhập từ formNhập từ formGhi sau khi quay xong
+• Kiểm tra duplicate SĐT bằng cách query Google Sheet trước khi cho phép quay
+• Cột 'Quà nhận được' được ghi sau khi vòng quay dừng và có kết quả
+
+Lưu ý kỹ thuật:
+• Google Apps Script Web App deploy với quyền Anyone để gọi không cần auth
+• Sử dụng doGet để check duplicate SĐT, doPost để ghi data mới
+• Implement timeout handling (nếu Google Sheet không phản hồi trong 5s, show error thân thiện)
+
+6.4 Vòng Quay Lucky Draw
+
+Thiết kế vòng quay:
+• 10 ô trên vòng quay, hình ảnh theo thiết kế standee
+• 3 loại quà phân bổ trên vòng quay với icon riêng biệt
+
+Logic phần thưởng — Deterministic Queue (không random):
+Kết quả quay được xác định trước theo vòng lặp tuần tự cố định:
+
+LượtQuà tặngGhi chú1Tag hành lý2Sổ tay P&P3Tag hành lý4Combo biểu mẫu nhân sự5Combo biểu mẫu nhân sự 6Tag hành lý7Combo biểu mẫu nhân sự8Tag hành lý9Combo biểu mẫu nhân sự10Combo biểu mẫu nhân sựLặp lại từ đầu
+• Con trỏ vị trí hiện tại trong vòng lặp được lưu trong Google Sheet (Sheet2!A1) để đảm bảo nhất quán khi nhiều thiết bị dùng đồng thời
+• Vòng quay animation phải dừng đúng ô tương ứng với kết quả đã định
+
+Animation vòng quay:
+• Thời gian quay: 4–5 giây
+• Easing: ease-in → ease-out (tăng tốc rồi giảm tốc dần)
+• Vòng quay phải quay ít nhất 3–5 vòng đầy trước khi dừng vào ô kết quả
+
+Trạng thái hết quà:
+• Nếu tất cả tag hành lý (100 cái) và sổ tay (10 cái) đã phát hết → chỉ còn Combo biểu mẫu nhân sự
+• Combo biểu mẫu nhân sự không có giới hạn số lượng, không hiển thị tồn kho
+
+6.5 Hiển thị Tồn Kho Real-time
+Hiển thị tại màn hình vòng quay:
+
+Quà tặngSố lượng ban đầu / Hiển thịTag hành lý100 cái — Hiển thị số còn lại real-timeSổ tay P&P10 cái — Hiển thị số còn lại real-timeCombo biểu mẫu nhân sựKhông giới hạn — Không hiển thị tồn kho
+• Dữ liệu tồn kho tính từ Google Sheet (tổng ban đầu trừ số lần đã quay ra)
+• Refresh mỗi lần user vào màn hình vòng quay
+
+6.6 Màn hình Kết Quả
+• Hiển thị tên quà trúng thưởng + icon lớn
+• Animation confetti / celebration effect
+• "Chúc mừng [Tên]! Bạn đã nhận được [Tên quà]"
+• Hướng dẫn: Vui lòng gặp nhân viên P&P tại booth để nhận quà
+• Không có nút Quay lại hoặc Quay thêm — một lần duy nhất
+
+7. Non-Functional Requirements
+
+CategoryRequirementPerformanceLoad time < 3s trên 4G; < 5s trên 3GCompatibilityiOS Safari 15+, Android Chrome 100+, Samsung InternetOffline HandlingHiển thị thông báo lỗi nếu mất mạng, không crashConcurrencyHỗ trợ tối đa 5 thiết bị đồng thời không xảy ra race conditionSecurityKhông expose Google Sheet ID trực tiếp trong frontend (dùng Apps Script URL)ScalabilitySingle event, ~200–500 lượt dùng tối đa
+8. UI/UX Design Specifications
+
+8.1 Màu sắc
+
+RoleMàuHEXSử dụngPrimaryXanh đậm#184d99Background chính, heading, button nềnSecondaryXanh sáng#15b0f8Accent, border, highlightAccentVàng#ffc60bCTA button, icon nổi bậtBackgroundGradient#184d99 → #15b0f8Nền toàn appText sángTrắng#FFFFFFText trên nền tối
+8.2 Typography
+
+UsageFontWeightHeadline / CTA buttonsMontserrat800 — ExtraBoldSubheadingMontserrat600 — SemiBoldBody text / LabelMontserrat400 — RegularSố tồn kho / Số liệuMontserrat700 — Bold
+8.3 Layout
+• Viewport: mobile-first, max-width 430px, centered trên desktop
+• Padding ngang: 20px
+• Border radius: 16px cho cards, 50px cho buttons CTA
+• Nút CTA: background #ffc60b, text #184d99, font-weight 800, uppercase
+
+8.4 Màn hình & Components
+
+Màn hìnhMô tảSplashLogo P&P, gradient background, headline lớn, nút CTA vàngFormCard trắng trên nền gradient, input fields bo tròn, validation inlineSpin WheelVòng quay tròn full-width, badge tồn kho, nút QUAY màu vàngResultOverlay/modal celebration, confetti, tên quà lớn, hướng dẫn nhận quàError/DuplicateToast notification hoặc modal thân thiện
+9. Technical Architecture
+
+┌─────────────────────────────────────┐
+│         Frontend (Static)            │
+│  HTML + CSS + Vanilla JS / React     │
+│  Hosted: Vercel / Netlify / GH Pages │
+└────────────┬────────────────────────┘
+             │ HTTPS POST/GET
+             ▼
+┌─────────────────────────────────────┐
+│     Google Apps Script               │
+│     (Web App — doGet/doPost)         │
+│  - Check duplicate SĐT               │
+│  - Ghi data mới                      │
+│  - Đọc/cập nhật prize queue ptr      │
+│  - Trả về tồn kho real-time          │
+└────────────┬────────────────────────┘
+             │
+             ▼
+┌─────────────────────────────────────┐
+│         Google Sheets                │
+│  Sheet 1: Leads Data                 │
+│  Sheet 2: Config (queue ptr, tồn kho)│
+└─────────────────────────────────────┘
+
+9.1 Google Apps Script Endpoints
+
+EndpointMethodParamsResponseCheck SĐT duplicateGET?action=check&phone=0xxx{"exists": true/false}Submit & Get PrizePOST{name, phone, email, company}{"prize": "tag/notebook/combo", "remaining": {tag: X, notebook: Y}}Get InventoryGET?action=inventory{"tag": X, "notebook": Y}
+10. Out of Scope (v1.0)
+• Dashboard quản trị / admin panel
+• Export báo cáo trực tiếp từ webapp
+• Push notification
+• Multi-language (chỉ tiếng Việt)
+• Tích hợp CRM
+• QR code generator (dùng tool bên ngoài)
+
+11. Risks & Mitigations
+
+RiskLikelihoodImpactMitigationGoogle Sheet API rate limit (60 req/min)MediumHighImplement cache inventory 30s ở client + retry logicMất mạng tại venueMediumHighShow friendly error, hướng dẫn gặp staffRace condition: 2 người submit cùng lúcLowMediumLock bằng Apps Script LockServiceSĐT nhập sai format để bypass giới hạnLowLowNormalize SĐT (remove spaces, +84) trước khi checkAnimation lag trên máy yếuLowMediumCSS animation thuần, không dùng canvas nặng
+12. Launch Checklist
+• ☐  Google Sheet tạo xong, Apps Script deploy với quyền Public
+• ☐  Test check duplicate SĐT
+• ☐  Test ghi data (5 lượt liên tiếp, kiểm tra Sheet)
+• ☐  Test animation vòng quay trên iOS Safari & Android Chrome
+• ☐  Test hiển thị tồn kho real-time
+• ☐  Test trên điều kiện mạng yếu (Chrome DevTools throttle)
+• ☐  QR code trỏ đến URL webapp
+• ☐  Cài sẵn URL trên tablet/điện thoại demo tại booth
+• ☐  Brief nhân viên booth về cách hướng dẫn khách
+
+13. Timeline (Đề xuất)
+
+PhaseTasksDurationDesignWireframe, mockup mobile screens1–2 ngàyDevelopmentFrontend + Apps Script integration3–4 ngàyQA & TestingCross-device testing, edge cases1–2 ngàyDeploymentDeploy lên hosting, tạo QR code0.5 ngàyTOTAL~7–9 ngày
+
+
+Document version 1.0 — Prepared for Phuoc & Partners VLF 2026 Event
+PRD: P&P Lucky Spin  |  VLF 2026  |  v1.0
+
+Phuoc & Partners — Confidential  |  Trang 
+

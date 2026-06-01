@@ -66,7 +66,6 @@ app.post("/api/check-phone", async (req, res) => {
 });
 
 app.post("/api/spin", async (req, res) => {
-  await delay(500);
   const { name, phone, email, company } = req.body;
 
   let currentQueueIndex = queueIndex;

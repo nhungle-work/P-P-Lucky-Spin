@@ -26,6 +26,10 @@ export default function SpinWheel() {
   const [inventory, setInventory] = useState<Inventory | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
+  const [transitionState, setTransitionState] = useState({
+    duration: '0s',
+    timingFunction: 'cubic-bezier(0.15, 0, 0.15, 1)'
+  });
 
   useEffect(() => {
     if (!lead) {
@@ -48,33 +52,43 @@ export default function SpinWheel() {
     if (isSpinning) return;
     setIsSpinning(true);
 
+    const startRotation = rotation;
+
+    // Bắt đầu quay ngay lập tức (hiệu ứng quay "chờ" API)
+    setTransitionState({
+      duration: '8s', // Quay 8 vòng trong 8s
+      timingFunction: 'cubic-bezier(0.1, 0, 0.9, 1)' // Bắt đầu nhanh, duy trì tốc độ
+    });
+    setRotation(startRotation + 2880); 
+
     try {
       const response = await submitLead(lead);
       const prizeId = response.prize.id;
       
-      // Find index of prize in wheel to stop at
-      // We'll pick a random matching segment from our lookup array
       const matchingIndices = prizesLookup.map((p, i) => p.id === prizeId ? i : -1).filter(i => i !== -1);
       const targetIndex = matchingIndices[Math.floor(Math.random() * matchingIndices.length)];
-      
-      // 10 segments -> 36 degrees per segment
       const segmentAngle = 36;
-      // The pointer is at the top (0 degrees).
-      // We want the target segment's center to land exactly at 0 (pointing directly up).
-      const targetRotation = 360 - (targetIndex * segmentAngle + segmentAngle / 2);
+      const targetOffset = 360 - (targetIndex * segmentAngle + segmentAngle / 2);
       
-      const extraSpins = 5; // Spin 5 full times
-      const newRotation = rotation + (extraSpins * 360) + targetRotation - (rotation % 360);
+      // Thay đổi đích đến của vòng quay thành vị trí trúng thưởng
+      // và thay đổi kiểu transition để vòng quay dừng lại mượt mà (ease-out)
+      const finalRotation = startRotation + 1800 + targetOffset - (startRotation % 360);
       
-      setRotation(newRotation);
+      setTransitionState({
+        duration: '4s', // Dừng lại sau 4s kể từ khi có API response
+        timingFunction: 'cubic-bezier(0.15, 0, 0.15, 1)'
+      });
+      setRotation(finalRotation);
 
       setTimeout(() => {
         setIsSpinning(false);
         navigate('/result', { state: { prize: response.prize } });
-      }, 4500); // Wait for animation to finish
+      }, 4500); // Thời gian chờ đủ 4s + 0.5s buffer
       
     } catch (e: any) {
       alert(e.message || "Có lỗi xảy ra");
+      setTransitionState({ duration: '1s', timingFunction: 'ease-out' });
+      setRotation(startRotation); // Quay về trạng thái ban đầu nếu lỗi
       setIsSpinning(false);
     }
   };
@@ -121,8 +135,8 @@ export default function SpinWheel() {
             className="w-full h-full bg-[#002e68] rounded-full overflow-hidden relative border-4 border-[#001a40] transition-transform"
             style={{ 
               transform: `rotate(${rotation}deg)`, 
-              transitionDuration: isSpinning ? '4s' : '0s',
-              transitionTimingFunction: 'cubic-bezier(0.15, 0, 0.15, 1)'
+              transitionDuration: transitionState.duration,
+              transitionTimingFunction: transitionState.timingFunction
             }}
           >
             {/* Background Wedges */}
