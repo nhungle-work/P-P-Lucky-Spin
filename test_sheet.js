@@ -11,7 +11,7 @@ async function test() {
     phone: "0999999999",
     email: "agent@test.com",
     company: "Test Co",
-    prize: "Combo nhân sự",
+    prize: "Combo 30 biểu mẫu nhân sự",
     timestamp: new Date().toISOString()
   };
 

@@ -7,15 +7,15 @@ import PrizeIcon from '../components/PrizeIcon';
 
 const prizesLookup = [
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
-  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
+  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
   { id: 'notebook', name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
-  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
-  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
+  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
+  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
-  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
+  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
-  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" },
-  { id: 'combo', name: "Combo nhân sự", icon: "folder_shared" }
+  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
+  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" }
 ];
 
 export default function SpinWheel() {

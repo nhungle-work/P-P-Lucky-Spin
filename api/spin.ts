@@ -1,15 +1,15 @@
 // Prize rotation sequence (must match frontend prizesLookup and PRD exactly)
 const prizes = [
   { id: "tag", name: "Tag hành lý", icon: "tag" },
-  { id: "combo", name: "Combo nhân sự", icon: "folder_shared" },
+  { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
   { id: "notebook", name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
-  { id: "combo", name: "Combo nhân sự", icon: "folder_shared" },
-  { id: "combo", name: "Combo nhân sự", icon: "folder_shared" },
+  { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
+  { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
   { id: "tag", name: "Tag hành lý", icon: "tag" },
-  { id: "combo", name: "Combo nhân sự", icon: "folder_shared" },
+  { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
   { id: "tag", name: "Tag hành lý", icon: "tag" },
-  { id: "combo", name: "Combo nhân sự", icon: "folder_shared" },
-  { id: "combo", name: "Combo nhân sự", icon: "folder_shared" },
+  { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
+  { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
 ];
 
 const TAG_TOTAL = 100;
@@ -101,9 +101,9 @@ export default async function handler(req: any, res: any) {
       // 5. Determine prize based on queue
       let prizeObj = prizes[queueIndex];
       if (prizeObj.id === "tag" && remainingTag <= 0) {
-        prizeObj = { id: "combo", name: "Combo nhân sự", icon: "folder_shared" };
+        prizeObj = { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" };
       } else if (prizeObj.id === "notebook" && remainingNotebook <= 0) {
-        prizeObj = { id: "combo", name: "Combo nhân sự", icon: "folder_shared" };
+        prizeObj = { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" };
       }
 
       // 6. Update lead with actual prize
