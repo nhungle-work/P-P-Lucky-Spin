@@ -54,12 +54,12 @@ export default function SpinWheel() {
 
     const startRotation = rotation;
 
-    // Bắt đầu quay ngay lập tức (hiệu ứng quay "chờ" API)
+    // Bắt đầu quay ngay lập tức
     setTransitionState({
-      duration: '8s', // Quay 8 vòng trong 8s
-      timingFunction: 'cubic-bezier(0.1, 0, 0.9, 1)' // Bắt đầu nhanh, duy trì tốc độ
+      duration: '4s', // Thời gian quay chờ ngắn hơn
+      timingFunction: 'cubic-bezier(0.2, 0, 0.8, 1)' 
     });
-    setRotation(startRotation + 2880); 
+    setRotation(startRotation + 2160); // 6 vòng chờ
 
     try {
       const response = await submitLead(lead);
@@ -70,25 +70,24 @@ export default function SpinWheel() {
       const segmentAngle = 36;
       const targetOffset = 360 - (targetIndex * segmentAngle + segmentAngle / 2);
       
-      // Thay đổi đích đến của vòng quay thành vị trí trúng thưởng
-      // và thay đổi kiểu transition để vòng quay dừng lại mượt mà (ease-out)
-      const finalRotation = startRotation + 1800 + targetOffset - (startRotation % 360);
+      // Giảm số vòng quay còn lại xuống 4 vòng (1440 độ) để vòng quay kết thúc nhanh gọn
+      const finalRotation = startRotation + 1440 + targetOffset - (startRotation % 360);
       
       setTransitionState({
-        duration: '4s', // Dừng lại sau 4s kể từ khi có API response
-        timingFunction: 'cubic-bezier(0.15, 0, 0.15, 1)'
+        duration: '2.5s', // Dừng lại sau 2.5s kể từ khi có API response
+        timingFunction: 'cubic-bezier(0.15, 0, 0.05, 1)'
       });
       setRotation(finalRotation);
 
       setTimeout(() => {
         setIsSpinning(false);
         navigate('/result', { state: { prize: response.prize } });
-      }, 4500); // Thời gian chờ đủ 4s + 0.5s buffer
+      }, 2700); // Thời gian chờ đủ 2.5s + 0.2s buffer
       
     } catch (e: any) {
       alert(e.message || "Có lỗi xảy ra");
       setTransitionState({ duration: '1s', timingFunction: 'ease-out' });
-      setRotation(startRotation); // Quay về trạng thái ban đầu nếu lỗi
+      setRotation(startRotation); 
       setIsSpinning(false);
     }
   };
