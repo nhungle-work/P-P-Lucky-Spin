@@ -69,6 +69,13 @@ export default function SpinWheel() {
 
     try {
       const response = await submitLead(lead);
+      
+      // Ensure the spin takes exactly 3 seconds total (2.2s spin + 0.8s brake)
+      const elapsed = Date.now() - spinStartTime;
+      if (elapsed < 2200) {
+        await new Promise(resolve => setTimeout(resolve, 2200 - elapsed));
+      }
+
       const prizeId = response.prize.id;
       
       const matchingIndices = prizesLookup.map((p, i) => p.id === prizeId ? i : -1).filter(i => i !== -1);

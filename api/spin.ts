@@ -122,8 +122,8 @@ export default async function handler(req: any, res: any) {
       const newRemainingTag = prizeObj.id === "tag" ? remainingTag - 1 : remainingTag;
       const newRemainingNotebook = prizeObj.id === "notebook" ? remainingNotebook - 1 : remainingNotebook;
 
-      // 8. Save to Google Sheets
-      await saveToGoogleSheets({ name, phone, email, company, prize: prizeObj.name, timestamp });
+      // 8. Save to Google Sheets in background (don't await to speed up spin response)
+      saveToGoogleSheets({ name, phone, email, company, prize: prizeObj.name, timestamp }).catch(e => console.error(e));
 
       return res.json({
         prize: prizeObj,
