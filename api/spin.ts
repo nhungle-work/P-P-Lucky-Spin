@@ -1,17 +1,4 @@
-// Prize rotation sequence (must match frontend prizesLookup and PRD exactly)
-const prizes = [
-  { id: "tag", name: "Tag hành lý", icon: "tag" },
-  { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
-  { id: "notebook", name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
-  { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
-  { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
-  { id: "tag", name: "Tag hành lý", icon: "tag" },
-  { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
-  { id: "tag", name: "Tag hành lý", icon: "tag" },
-  { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
-  { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
-];
-
+// Dynamic prize rotation is fetched from Supabase game_state
 const TAG_TOTAL = 100;
 const NOTEBOOK_TOTAL = 10;
 
@@ -82,7 +69,27 @@ export default async function handler(req: any, res: any) {
         // Fallback to 0 if count fails
       }
 
-      const queueIndex = (priorSpins || 0) % prizes.length;
+      // Get dynamic prize sequence
+      const PRIZE_MAP: Record<string, { id: string; name: string; icon: string }> = {
+        tag: { id: "tag", name: "Tag hành lý", icon: "tag" },
+        combo: { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
+        notebook: { id: "notebook", name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
+      };
+      const DEFAULT_SEQUENCE = [
+        PRIZE_MAP.tag, PRIZE_MAP.combo, PRIZE_MAP.notebook, PRIZE_MAP.combo, PRIZE_MAP.combo,
+        PRIZE_MAP.tag, PRIZE_MAP.combo, PRIZE_MAP.tag, PRIZE_MAP.combo, PRIZE_MAP.combo
+      ];
+
+      let dynamicPrizes = DEFAULT_SEQUENCE;
+      const { data: stateData } = await supabase.from("game_state").select("prize_sequence").eq("id", 1).maybeSingle();
+      if (stateData && stateData.prize_sequence) {
+        const keys = stateData.prize_sequence.split(",").map((k: string) => k.trim().toLowerCase());
+        if (keys.length >= 2) {
+          dynamicPrizes = keys.map((key: string) => PRIZE_MAP[key] || PRIZE_MAP["combo"]);
+        }
+      }
+
+      const queueIndex = (priorSpins || 0) % dynamicPrizes.length;
 
       // 4. Get remaining inventory from actual leads (excluding the Pending ones if they matter, but they don't match names)
       const { count: tagUsed } = await supabase
@@ -99,11 +106,11 @@ export default async function handler(req: any, res: any) {
       const remainingNotebook = Math.max(0, NOTEBOOK_TOTAL - (notebookUsed || 0));
 
       // 5. Determine prize based on queue
-      let prizeObj = prizes[queueIndex];
+      let prizeObj = dynamicPrizes[queueIndex];
       if (prizeObj.id === "tag" && remainingTag <= 0) {
-        prizeObj = { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" };
+        prizeObj = PRIZE_MAP.combo;
       } else if (prizeObj.id === "notebook" && remainingNotebook <= 0) {
-        prizeObj = { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" };
+        prizeObj = PRIZE_MAP.combo;
       }
 
       // 6. Update lead with actual prize

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getInventory, submitLead } from '../lib/api';
+import { getConfig, getInventory, submitLead } from '../lib/api';
 import { Inventory, LeadData, Prize } from '../types';
 import Logo from '../components/Logo';
 import PrizeIcon from '../components/PrizeIcon';
 
-const prizesLookup = [
+const DEFAULT_PRIZES = [
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
   { id: 'combo', name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
   { id: 'notebook', name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
@@ -24,6 +24,7 @@ export default function SpinWheel() {
   const lead = location.state?.lead as LeadData;
 
   const [inventory, setInventory] = useState<Inventory | null>(null);
+  const [prizesLookup, setPrizesLookup] = useState<Prize[]>(DEFAULT_PRIZES);
   const [isSpinning, setIsSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [transitionState, setTransitionState] = useState({
@@ -41,8 +42,11 @@ export default function SpinWheel() {
 
   const loadInventory = async () => {
     try {
-      const inv = await getInventory();
+      const [inv, config] = await Promise.all([getInventory(), getConfig()]);
       setInventory(inv);
+      if (config && config.length >= 2) {
+        setPrizesLookup(config);
+      }
     } catch (e) {
       console.error(e);
     }
@@ -69,7 +73,7 @@ export default function SpinWheel() {
       
       const matchingIndices = prizesLookup.map((p, i) => p.id === prizeId ? i : -1).filter(i => i !== -1);
       const targetIndex = matchingIndices[Math.floor(Math.random() * matchingIndices.length)];
-      const segmentAngle = 36;
+      const segmentAngle = 360 / prizesLookup.length;
       const targetOffset = 360 - (targetIndex * segmentAngle + segmentAngle / 2);
       
       // Tính toán góc hiện tại chính xác dựa trên thời gian trôi qua
@@ -150,7 +154,7 @@ export default function SpinWheel() {
           >
             {/* Background Wedges */}
             {prizesLookup.map((prize, index) => {
-              const segmentAngle = 36;
+              const segmentAngle = 360 / prizesLookup.length;
               const skew = 90 - segmentAngle;
               return (
                 <div 
@@ -166,7 +170,7 @@ export default function SpinWheel() {
 
             {/* Content Layer (Icons) - Layered on top to bypass browser skew z-index bugs */}
             {prizesLookup.map((prize, index) => {
-              const segmentAngle = 36;
+              const segmentAngle = 360 / prizesLookup.length;
               const angle = index * segmentAngle + segmentAngle / 2;
               return (
                 <div 

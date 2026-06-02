@@ -244,6 +244,41 @@ app.get("/api/inventory", async (req, res) => {
   }
 });
 
+app.get("/api/config", async (req, res) => {
+  const PRIZE_MAP: Record<string, { id: string; name: string; icon: string }> = {
+    tag: { id: "tag", name: "Tag hành lý", icon: "tag" },
+    combo: { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
+    notebook: { id: "notebook", name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
+  };
+
+  const DEFAULT_SEQUENCE = [
+    PRIZE_MAP.tag, PRIZE_MAP.combo, PRIZE_MAP.notebook, PRIZE_MAP.combo, PRIZE_MAP.combo,
+    PRIZE_MAP.tag, PRIZE_MAP.combo, PRIZE_MAP.tag, PRIZE_MAP.combo, PRIZE_MAP.combo
+  ];
+
+  if (supabase) {
+    const { data, error } = await supabase
+      .from("game_state")
+      .select("prize_sequence")
+      .eq("id", 1)
+      .maybeSingle();
+
+    if (error || !data || !data.prize_sequence) {
+      return res.json({ sequence: DEFAULT_SEQUENCE });
+    }
+
+    const keys = data.prize_sequence.split(",").map((k: string) => k.trim().toLowerCase());
+    if (keys.length < 2) {
+       return res.json({ sequence: DEFAULT_SEQUENCE });
+    }
+
+    const parsedSequence = keys.map((key: string) => PRIZE_MAP[key] || PRIZE_MAP.combo);
+    return res.json({ sequence: parsedSequence });
+  } else {
+    res.json({ sequence: DEFAULT_SEQUENCE });
+  }
+});
+
 app.get("/api/leads", async (req, res) => {
   if (supabase) {
     const { data, error } = await supabase

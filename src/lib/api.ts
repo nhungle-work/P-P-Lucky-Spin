@@ -35,7 +35,16 @@ export async function submitLead(lead: LeadData): Promise<{ prize: Prize, invent
   return res.json();
 }
 
-export async function getInventory(): Promise<Inventory> {
+export const getConfig = async (): Promise<Prize[]> => {
+  const res = await fetch('/api/config');
+  if (!res.ok) {
+    throw new Error('Không thể tải cấu hình vòng quay');
+  }
+  const data = await res.json();
+  return data.sequence;
+};
+
+export const getInventory = async (): Promise<Inventory> => {
   const res = await fetch('/api/inventory');
   return res.json();
 }
