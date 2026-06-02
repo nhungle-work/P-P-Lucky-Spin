@@ -26,15 +26,15 @@ let inventory = {
 
 const prizes = [
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
-  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
+  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & Partners", icon: "folder_shared" },
   { id: 'notebook', name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
-  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
-  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
+  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & Partners", icon: "folder_shared" },
+  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & Partners", icon: "folder_shared" },
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
-  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
+  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & Partners", icon: "folder_shared" },
   { id: 'tag', name: "Tag hành lý", icon: "tag" },
-  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
-  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" }
+  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & Partners", icon: "folder_shared" },
+  { id: 'combo', name: "Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & Partners", icon: "folder_shared" }
 ];
 
 const app = express();
@@ -125,7 +125,7 @@ app.post("/api/spin", async (req, res) => {
 
       // Check inventory
       if (prizeId !== 'combo' && currentInventory[prizeId as keyof typeof currentInventory] <= 0) {
-        prizeObj = { id: 'combo', name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" };
+        prizeObj = { id: 'combo', name: "Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & Partners", icon: "folder_shared" };
       } else if (prizeId !== 'combo') {
         currentInventory[prizeId as keyof typeof currentInventory]--;
       }
@@ -190,7 +190,7 @@ app.post("/api/spin", async (req, res) => {
     let prizeId = prizeObj.id;
     
     if (prizeId !== 'combo' && inventory[prizeId as keyof typeof inventory] <= 0) {
-      prizeObj = { id: 'combo', name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" };
+      prizeObj = { id: 'combo', name: "Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & Partners", icon: "folder_shared" };
     } else if (prizeId !== 'combo') {
       inventory[prizeId as keyof typeof inventory]--;
     }
@@ -247,7 +247,7 @@ app.get("/api/inventory", async (req, res) => {
 app.get("/api/config", async (req, res) => {
   const PRIZE_MAP: Record<string, { id: string; name: string; icon: string }> = {
     tag: { id: "tag", name: "Tag hành lý", icon: "tag" },
-    combo: { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
+    combo: { id: "combo", name: "Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & Partners", icon: "folder_shared" },
     notebook: { id: "notebook", name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
   };
 

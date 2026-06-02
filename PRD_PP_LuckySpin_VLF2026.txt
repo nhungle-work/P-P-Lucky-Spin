@@ -98,7 +98,7 @@ Thiết kế vòng quay:
 Logic phần thưởng — Deterministic Queue (không random):
 Kết quả quay được xác định trước theo vòng lặp tuần tự cố định:
 
-LượtQuà tặngGhi chú1Tag hành lý2Combo 30 biểu mẫu nhân sự3Sổ tay Phuoc & Partners4Combo 30 biểu mẫu nhân sự5Combo 30 biểu mẫu nhân sự 6Tag hành lý7Combo 30 biểu mẫu nhân sự8Tag hành lý9Combo 30 biểu mẫu nhân sự10Combo 30 biểu mẫu nhân sựLặp lại từ đầu
+LượtQuà tặngGhi chú1Tag hành lý2Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & Partners3Sổ tay Phuoc & Partners4Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & Partners5Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & Partners 6Tag hành lý7Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & Partners8Tag hành lý9Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & Partners10Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & PartnersLặp lại từ đầu
 • Con trỏ vị trí hiện tại trong vòng lặp được lưu trong Google Sheet (Sheet2!A1) để đảm bảo nhất quán khi nhiều thiết bị dùng đồng thời
 • Vòng quay animation phải dừng đúng ô tương ứng với kết quả đã định
 
@@ -108,13 +108,13 @@ Animation vòng quay:
 • Vòng quay phải quay ít nhất 3–5 vòng đầy trước khi dừng vào ô kết quả
 
 Trạng thái hết quà:
-• Nếu tất cả tag hành lý (100 cái) và sổ tay (10 cái) đã phát hết → chỉ còn Combo 30 biểu mẫu nhân sự
-• Combo 30 biểu mẫu nhân sự không có giới hạn số lượng, không hiển thị tồn kho
+• Nếu tất cả tag hành lý (100 cái) và sổ tay (10 cái) đã phát hết → chỉ còn Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & Partners
+• Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & Partners không có giới hạn số lượng, không hiển thị tồn kho
 
 6.5 Hiển thị Tồn Kho Real-time
 Hiển thị tại màn hình vòng quay:
 
-Quà tặngSố lượng ban đầu / Hiển thịTag hành lý100 cái — Hiển thị số còn lại real-timeSổ tay Phuoc & Partners10 cái — Hiển thị số còn lại real-timeCombo 30 biểu mẫu nhân sựKhông giới hạn — Không hiển thị tồn kho
+Quà tặngSố lượng ban đầu / Hiển thịTag hành lý100 cái — Hiển thị số còn lại real-timeSổ tay Phuoc & Partners10 cái — Hiển thị số còn lại real-timeCombo 30 biểu mẫu nhân sự độc quyền của Phuoc & PartnersKhông giới hạn — Không hiển thị tồn kho
 • Dữ liệu tồn kho tính từ Google Sheet (tổng ban đầu trừ số lần đã quay ra)
 • Refresh mỗi lần user vào màn hình vòng quay
 

@@ -72,7 +72,7 @@ export default async function handler(req: any, res: any) {
       // Get dynamic prize sequence
       const PRIZE_MAP: Record<string, { id: string; name: string; icon: string }> = {
         tag: { id: "tag", name: "Tag hành lý", icon: "tag" },
-        combo: { id: "combo", name: "Combo 30 biểu mẫu nhân sự", icon: "folder_shared" },
+        combo: { id: "combo", name: "Combo 30 biểu mẫu nhân sự độc quyền của Phuoc & Partners", icon: "folder_shared" },
         notebook: { id: "notebook", name: "Sổ tay Phuoc & Partners", icon: "menu_book" },
       };
       const DEFAULT_SEQUENCE = [
