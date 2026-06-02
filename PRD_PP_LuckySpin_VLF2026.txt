@@ -98,7 +98,7 @@ Thiết kế vòng quay:
 Logic phần thưởng — Deterministic Queue (không random):
 Kết quả quay được xác định trước theo vòng lặp tuần tự cố định:
 
-LượtQuà tặngGhi chú1Tag hành lý2Combo 30 biểu mẫu nhân sự3Sổ tay P&P4Combo 30 biểu mẫu nhân sự5Combo 30 biểu mẫu nhân sự 6Tag hành lý7Combo 30 biểu mẫu nhân sự8Tag hành lý9Combo 30 biểu mẫu nhân sự10Combo 30 biểu mẫu nhân sựLặp lại từ đầu
+LượtQuà tặngGhi chú1Tag hành lý2Combo 30 biểu mẫu nhân sự3Sổ tay Phuoc & Partners4Combo 30 biểu mẫu nhân sự5Combo 30 biểu mẫu nhân sự 6Tag hành lý7Combo 30 biểu mẫu nhân sự8Tag hành lý9Combo 30 biểu mẫu nhân sự10Combo 30 biểu mẫu nhân sựLặp lại từ đầu
 • Con trỏ vị trí hiện tại trong vòng lặp được lưu trong Google Sheet (Sheet2!A1) để đảm bảo nhất quán khi nhiều thiết bị dùng đồng thời
 • Vòng quay animation phải dừng đúng ô tương ứng với kết quả đã định
 
@@ -114,7 +114,7 @@ Trạng thái hết quà:
 6.5 Hiển thị Tồn Kho Real-time
 Hiển thị tại màn hình vòng quay:
 
-Quà tặngSố lượng ban đầu / Hiển thịTag hành lý100 cái — Hiển thị số còn lại real-timeSổ tay P&P10 cái — Hiển thị số còn lại real-timeCombo 30 biểu mẫu nhân sựKhông giới hạn — Không hiển thị tồn kho
+Quà tặngSố lượng ban đầu / Hiển thịTag hành lý100 cái — Hiển thị số còn lại real-timeSổ tay Phuoc & Partners10 cái — Hiển thị số còn lại real-timeCombo 30 biểu mẫu nhân sựKhông giới hạn — Không hiển thị tồn kho
 • Dữ liệu tồn kho tính từ Google Sheet (tổng ban đầu trừ số lần đã quay ra)
 • Refresh mỗi lần user vào màn hình vòng quay
 
