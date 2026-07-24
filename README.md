@@ -28,7 +28,7 @@ Tại sự kiện **Vietnam Labour Forum 2026 (VLF 2026)**, gian hàng (booth) c
 ## 🧠 System Architecture & Design Decision
 Một trong những thách thức của ứng dụng phục vụ sự kiện (Event App) là giúp đội ngũ vận hành theo dõi dữ liệu thực tế mà không cần kiến thức kỹ thuật. Do đó, hệ thống được thiết kế tách biệt:
 - **Core Backend (Supabase):** Xử lý lưu lượng truy cập, validate dữ liệu, chống spam và quản lý logic vòng quay với tốc độ cao.
-- **Operations Dashboard (Google Sheets):** Dữ liệu lead được đồng bộ song song. Đội ngũ vận hành tại gian hàng có thể xem trực tiếp danh sách người trúng giải, tồn kho quà tặng theo thời gian thực trên giao diện Excel/Sheets quen thuộc mà không cần cấp quyền truy cập vào database chính (No-code Admin Panel).
+- **Operations Dashboard (Google Sheets):** Dữ liệu lead được đồng bộ song song. Đội ngũ vận hành tại gian hàng có thể xem trực tiếp danh sách người trúng giải và quà họ nhận được trên Google Sheets quen thuộc mà không cần cấp quyền truy cập vào database chính (No-code Admin Panel).
 
 ## ⚙️ Hướng dẫn chạy Local (Dành cho Technical Review)
 
