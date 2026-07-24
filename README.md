@@ -13,11 +13,14 @@ Tại sự kiện **Vietnam Labour Forum 2026 (VLF 2026)**, gian hàng (booth) c
 **P&P Lucky Spin** ra đời như một giải pháp số hóa toàn diện:
 - **Khách tham dự:** Chỉ cần quét mã QR bằng điện thoại, điền thông tin nhanh gọn, tham gia vòng quay may mắn với hiệu ứng bắt mắt để nhận quà.
 - **Ban tổ chức:** Dữ liệu khách hàng được ghi nhận hoàn toàn tự động, real-time, chặn trùng lặp số điện thoại (1 người chỉ quay 1 lần) và tự động quản lý kho quà tặng.
+- **Tối ưu chi phí cho Doanh nghiệp:** App được phát triển bằng kỹ thuật Vibe Coding – phù hợp với người làm Marketing (non-tech background), không cần tăng số lượng người vận hành booth cho việc thu thập dữ liệu khách hàng.
 
 ## 🎥 Video Demo
 > **Lưu ý dành cho nhà tuyển dụng:** Vì lý do bảo mật dữ liệu khách hàng sau sự kiện, ứng dụng hiện không còn chạy live. Vui lòng xem video demo quá trình hoạt động của app dưới đây:
 
-*[💡 Kéo thả file video .mp4 hoặc .gif của bạn vào dòng này]*
+![Demo PP Lucky Spin](Demo%20PP%20Lucky%20Spin.png)
+
+[▶️ Xem Video Demo đầy đủ tại đây](Video%20Demo%20PP%20Lucky%20Spin.mp4)
 
 ## ✨ Các tính năng chính (Key Features)
 - **📱 Mobile-First UI/UX:** Thiết kế tối ưu 100% cho màn hình điện thoại.
