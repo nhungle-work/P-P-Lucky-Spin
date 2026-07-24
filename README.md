@@ -13,7 +13,6 @@ Tại sự kiện **Vietnam Labour Forum 2026 (VLF 2026)**, gian hàng (booth) c
 **P&P Lucky Spin** ra đời như một giải pháp số hóa toàn diện:
 - **Khách tham dự:** Chỉ cần quét mã QR bằng điện thoại, điền thông tin nhanh gọn, tham gia vòng quay may mắn với hiệu ứng bắt mắt để nhận quà.
 - **Ban tổ chức:** Dữ liệu khách hàng được ghi nhận hoàn toàn tự động, real-time, chặn trùng lặp số điện thoại (1 người chỉ quay 1 lần) và tự động quản lý kho quà tặng.
-- **Tối ưu chi phí cho Doanh nghiệp:** App được phát triển bằng kỹ thuật Vibe Coding - phù hợp với người làm Marketing (non-tech background), không cần tăng số lượng người vận hành booth cho việc thu thập dữ liệu khách hàng.
 
 ## 🎥 Video Demo
 > **Lưu ý dành cho nhà tuyển dụng:** Vì lý do bảo mật dữ liệu khách hàng sau sự kiện, ứng dụng hiện không còn chạy live. Vui lòng xem video demo quá trình hoạt động của app dưới đây:
@@ -29,7 +28,7 @@ Tại sự kiện **Vietnam Labour Forum 2026 (VLF 2026)**, gian hàng (booth) c
 ## 🧠 System Architecture & Design Decision
 Một trong những thách thức của ứng dụng phục vụ sự kiện (Event App) là giúp đội ngũ vận hành theo dõi dữ liệu thực tế mà không cần kiến thức kỹ thuật. Do đó, hệ thống được thiết kế tách biệt:
 - **Core Backend (Supabase):** Xử lý lưu lượng truy cập, validate dữ liệu, chống spam và quản lý logic vòng quay với tốc độ cao.
-- **Operations Dashboard (Google Sheets):** Dữ liệu lead được đồng bộ song song. Đội ngũ vận hành tại gian hàng có thể xem trực tiếp danh sách người trúng giải và quà họ nhận được trên Google Sheets quen thuộc mà không cần cấp quyền truy cập vào database chính (No-code Admin Panel).
+- **Operations Dashboard (Google Sheets):** Dữ liệu lead được đồng bộ song song. Đội ngũ vận hành tại gian hàng có thể xem trực tiếp danh sách người trúng giải, tồn kho quà tặng theo thời gian thực trên giao diện Excel/Sheets quen thuộc mà không cần cấp quyền truy cập vào database chính (No-code Admin Panel).
 
 ## ⚙️ Hướng dẫn chạy Local (Dành cho Technical Review)
 
