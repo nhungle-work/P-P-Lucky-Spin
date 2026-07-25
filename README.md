@@ -15,6 +15,9 @@ Tại sự kiện **Vietnam Labour Forum 2026 (VLF 2026)**, gian hàng (booth) c
 - **Ban tổ chức:** Dữ liệu khách hàng được ghi nhận hoàn toàn tự động, real-time, chặn trùng lặp số điện thoại (1 người chỉ quay 1 lần) và tự động quản lý kho quà tặng.
 - **Tối ưu chi phí cho Doanh nghiệp:** App được phát triển bằng kỹ thuật Vibe Coding – phù hợp với người làm Marketing (non-tech background), không cần tăng số lượng người vận hành booth cho việc thu thập dữ liệu khách hàng.
 
+## 👤 Vai trò của tôi
+Là Marketing Executive của Phuoc & Partners, tôi trực tiếp tìm giải pháp cho bài toán này dựa trên hoạt động và cách vận hành những lần đặt booth trước. Từ đó tôi viết PRD (Product Requirements Document) và tự thực hiện toàn bộ vòng đời sản phẩm bằng kỹ thuật **Vibe Coding** — từ thiết kế UI/UX, phát triển tính năng, viết nội dung trong app, deploy, cho đến user testing trước sự kiện. Toàn bộ quá trình không cần đến đội ngũ Dev chuyên trách.
+
 ## 🎥 Video Demo
 > **Lưu ý dành cho nhà tuyển dụng:** Vì lý do bảo mật dữ liệu khách hàng sau sự kiện, ứng dụng hiện không còn chạy live. Vui lòng xem video demo quá trình hoạt động của app dưới đây:
 
@@ -27,6 +30,16 @@ Tại sự kiện **Vietnam Labour Forum 2026 (VLF 2026)**, gian hàng (booth) c
 - **🛡️ Real-time Validation & Anti-Spam:** Validate form nhập liệu ngay lập tức, kiểm tra số điện thoại để đảm bảo mỗi người chỉ được tham gia 1 lần duy nhất.
 - **🎡 Interactive Animation:** Hiệu ứng vòng quay may mắn (Lucky Spin) mượt mà.
 - **🤖 AI Integration:** Tích hợp Google Gemini API để hỗ trợ xử lý logic nội dung (nếu có).
+
+## 📊 Kết quả
+| | Trước (VNHR Summit 2025 - hoạt động thủ công) | Sau (VLF 2026 - P&P Lucky Spin) |
+|---|---|---|
+| Data khách hàng thu thập | 3 | 16 |
+| Nhân sự trực booth | 6 người | 4 người |
+
+*Lưu ý: Đây là lần đầu tiên P&P triển khai hình thức Lucky Spin dạng app tại booth, nên game chưa có "độ nhận diện" với khách tham dự như các hoạt động quen thuộc khác. Số liệu thu thập được vì vậy còn phụ thuộc vào lưu lượng khách, thời điểm diễn ra sự kiện và mức độ chủ động mời khách của đội ngũ trực booth hôm đó.*
+
+Kết quả rõ ràng nhất mà tôi ghi nhận được nằm ở khía cạnh **vận hành**: đội ngũ không còn tốn thời gian tổng hợp dữ liệu thủ công sau sự kiện — mọi thứ đã có sẵn trên Google Sheets ngay khi khách quay xong, giúp giảm số nhân sự cần thiết tại booth mà vẫn đảm bảo thu thập data đầy đủ và chính xác hơn cách làm cũ.
 
 ## 🧠 System Architecture & Design Decision
 Một trong những thách thức của ứng dụng phục vụ sự kiện (Event App) là giúp đội ngũ vận hành theo dõi dữ liệu thực tế mà không cần kiến thức kỹ thuật. Do đó, hệ thống được thiết kế tách biệt:
